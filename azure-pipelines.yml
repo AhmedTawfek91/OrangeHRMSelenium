@@ -38,7 +38,7 @@ steps:
     inputs:
       mavenPomFile: 'pom.xml'
       goals: 'clean test'
-      publishJUnitResults: true
+      publishJUnitResults: false
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
 
   # 4. Debug — list generated files
@@ -52,10 +52,18 @@ steps:
     displayName: 'List generated files'
     condition: always()
 
-  # 5. Upload all reports
-  - task: PublishBuildArtifacts@1
-    displayName: 'Upload Test Reports'
+  # 5. Publish Cucumber HTML Report  ✅ added
+  - task: PublishHtmlReport@1
+    displayName: 'Publish Cucumber HTML Report'
     condition: always()
     inputs:
-      pathToPublish: 'target'
-      artifactName: 'test-reports'
+      reportDir: 'target/cucumber-reports'
+      tabName: 'Cucumber Report'
+
+  # 6. Publish JSON artifact  ✅ added
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Cucumber JSON'
+    condition: always()
+    inputs:
+      pathToPublish: 'target/cucumber-reports/cucumber.json'
+      artifactName: 'cucumber-json'
