@@ -19,7 +19,7 @@ public class TestBase extends AbstractTestNGCucumberTests {
             public void initiateBrowser()
     {
         ChromeOptions opt = new ChromeOptions();
-        boolean isCI = System.getenv("CI") != null || System.getenv("TF-BUILD") != null;
+        boolean isCI = System.getenv("CI") != null || System.getenv("TF_BUILD") != null;
         if(isCI)
         {
             opt.addArguments("--headless");
