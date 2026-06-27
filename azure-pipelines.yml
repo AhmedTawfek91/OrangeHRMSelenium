@@ -51,19 +51,3 @@ steps:
       ls -la logs/ || echo "logs/ not found"
     displayName: 'List generated files'
     condition: always()
-
-  # 5. Publish Cucumber HTML Report  ✅ added
-  - task: PublishHtmlReport@1
-    displayName: 'Publish Cucumber HTML Report'
-    condition: always()
-    inputs:
-      reportDir: 'target/cucumber-reports'
-      tabName: 'Cucumber Report'
-
-  # 6. Publish JSON artifact  ✅ added
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Cucumber JSON'
-    condition: always()
-    inputs:
-      pathToPublish: 'target/cucumber-reports/cucumber.json'
-      artifactName: 'cucumber-json'
