@@ -1,0 +1,51 @@
+name: Selenium Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # allows manual trigger from GitHub UI
+
+jobs:
+  selenium-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Java
+      - name: Set up JDK 24
+        uses: actions/setup-java@v4
+        with:
+          java-version: '24'
+          distribution: 'temurin'
+
+      # 3. Set up Chrome browser
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@latest
+
+      # 4. Run tests
+      - name: Run Selenium Tests
+        run: mvn clean test
+
+      # 5. Upload test reports
+      - name: List generated files
+        if: always()
+        run: |
+          echo "=== target folder ==="
+          ls -la target/ || echo "target/ not found"
+          find target -name "*.html" -o -name "*.json" -o -name "*.xml" 2>/dev/null
+          echo "=== logs folder ==="
+          ls -la logs/ || echo "logs/ not found"
+
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports
+          path: |
+            target/cucumber-reports/
+            logs/
